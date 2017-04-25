@@ -1,0 +1,43 @@
+#!/bin/bash
+
+### this script is to used to generate gtags for no-extension files
+files_all=`find  . -type f `
+### define a array to store the files without extensions
+declare -a files_noe
+###define a number as indexs of array above 
+fi=0 
+#### detect the file without extension name
+
+for i in $files_all; do
+    i_b=`basename $i`
+    i_f=${i_b%.*}
+    #echo $i_f
+    i_e=${i_b:${#i_f} + 1}
+    #echo $i_b
+    
+    if [[ "${i_e}" = "" ]] && [[ "${i_b}" != "GPATH" &&  "${i_b}" != "GTAGS" &&  "${i_b}" != "GRTAGS" ]]; then
+
+	files_noe[$fi]=${i}
+        mv $i  $i.cpp
+	((fi=fi+1))
+
+    fi
+    
+done
+
+###  generate the tags
+gtags -v
+
+### restore the file names
+for (( idx=${#files_noe[@]}-1 ; idx>=0 ; idx--)) ; do
+     
+    mv ${files_noe[idx]}.cpp ${files_noe[idx]}
+    ffiles_noe=`readlink -f ${files_noe[idx]}`
+    ln -s ${ffiles_noe} ${files_noe[idx]}.cpp
+done
+
+
+
+
+
+

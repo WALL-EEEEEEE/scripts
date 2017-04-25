@@ -1,0 +1,123 @@
+#!/bin/zsh
+
+
+#
+#  @author    :  Johans
+#  @time      :  2016-07-24 
+#  @file      :  /home/jonans/.projectrc
+
+#traversal directory by finding the `bin` directory bottom-up style, the priority is ./bin/, ../bin/, ../../bin, ../../../bin
+finddirectory()
+{
+    argc=$#;
+    target=$1;
+    depth=$2;
+
+    if [ $argc = 2  ] ; then
+         export CURRENT_PATH=`pwd`
+        for (( i=0; i < $depth; i++ ))
+        do
+            result=`find . -maxdepth 1 -name $target`
+            pwd=`pwd`
+            if [ -n "$result"  ]; then
+                if [ "$pwd" = "/" ]; then
+                  tmppath='/'`basename $result`
+                  export FIND_PATH=$tmppath 
+                  return 1;
+                else
+                  tmppath=$pwd'/'`basename $result`
+                  export FIND_PATH=$tmppath 
+                  return 1;
+                fi
+            else 
+                cd ..
+
+            fi
+        done
+
+        return 0;
+
+    else
+        echo "\e[0,31m[Hints]:\e[m finddirectory function should be passed two parameters, but only $# be passed"
+        return 0
+    fi
+}
+
+
+#convient settings for compiling opencv project 
+
+gopencv()
+{
+    
+    export FIND_PATH=
+    export CURRENT_PATH=
+    export TARGET_DIRECTORY=
+
+    export LD_LIBRARY_PATH=/usr/local/lib
+
+    file=$1
+    olibs=$2
+    params=$3
+
+    extension=${file##*.}
+
+    if [ -f "$file" ]; then
+        
+        if [ "$extension" = "cpp" ] || [ "$extension" = "hpp" ]  || [ "$extension" = "c" ] || [ "$extension" = "h" ] ; then
+        
+            llibs=`pkg-config opencv  --cflags --libs`
+            if [ -n "$olibs" ] ; then
+                ${llibs}=`pkg-config opencv $olibs --cflags --libs`
+            fi 
+
+            target_file=${file%.*}
+            TARGET_DIRECTORY=./bin
+            finddirectory bin 3
+
+
+            if [ "$?" != 0 ] ; then
+                TARGET_DIRECTORY=$FIND_PATH
+            fi;
+
+            cd $CURRENT_PATH
+            if [ ! -d $TARGET_DIRECTORY ]; then
+                mkdir $TARGET_DIRECTORY
+            fi;
+            g++ -g -o $TARGET_DIRECTORY/${target_file} ${file} $(echo $llibs)
+
+            if [ $? = 0 ]; then
+                echo "\e[0;32m[Status]:\e[m compiling is completed!"
+
+                echo "\e[0;32m[Status]:\e[m running the $target_file"
+
+                if [ -n "$params" ]; then
+                    $TARGET_DIRECTORY/${target_file} $params
+                else
+                    $TARGET_DIRECTORY/${target_file}
+                fi
+
+
+                return;
+            fi
+
+        else
+            echo "\e[0;31m[Hints]:\e[m file $file is not a valid c or cpp file.\n"
+        fi
+
+    else 
+        echo "\e[0;31m[Hints]:\e[m file $file is not found.\n"
+        exit;
+    fi
+
+}
+
+
+alias SuperVote="cd /mnt/D/Developer/WorkPlace/Personal-Workplace-Temp/PHP/Supervote &&  sudo vim index.php"
+
+
+
+
+
+
+
+

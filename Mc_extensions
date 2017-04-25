@@ -1,0 +1,25 @@
+#!/bin/bash
+
+###This script is used to change files' extension
+
+Files=`find . -type f`
+
+for i in $Files; do
+    #mv  $i  "${i%.*}$1"
+    base=${i%.*}
+
+    if [ "$base" = "" ]; then
+        if [ "$1" != "" ]; then
+            mv $i $i.$1
+        fi
+    else
+        if [ "$1" != "" ]; then
+            mv $i ${i%.*}.$1
+        else
+            mv $i ${i%.*}
+        fi
+
+    fi
+done
+
+
