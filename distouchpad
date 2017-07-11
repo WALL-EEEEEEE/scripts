@@ -1,4 +1,0 @@
-#! /bin/bash
-sudo xinput set-prop 17 "Device Enabled" 0 
-
-

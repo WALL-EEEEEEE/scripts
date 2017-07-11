@@ -1,0 +1,19 @@
+#! /bin/bash
+#This script is a switch for distouchpad
+
+flag=$1
+padid=`xinput list | grep -i "touchpad" | grep -oP "id=\d*" | grep -oP "\d*"`
+if [ $# -ne 1 ] ; then 
+    echo "An option must be supplied to this script" >&2
+    exit 1
+fi
+if [ $flag == "on" ]; then
+    xinput set-prop $padid "Device Enabled" 1
+    echo "Touchpad is enabled now."
+elif  [ $flag == "off" ]; then
+    xinput set-prop $padid "Device Enabled" 0
+    echo "Touchpad is disabled now."
+else 
+    echo "Invalid directive, only 'on' or 'off' is enabled" >&2
+    exit 1
+fi
