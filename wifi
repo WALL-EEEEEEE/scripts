@@ -1,3 +1,0 @@
-#!/bin/bash
-sudo nmcli dev wifi connect tanshangche password SYD3163178888
-
