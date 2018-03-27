@@ -1,0 +1,14 @@
+#!/bin/bash
+#This script defines a function to parse config
+
+function parse_read_ini(){
+    manual_info="parse_read_ini ini_file ini_option" 
+    if [ -z $1 ]; then
+	echo $manual_info
+	echo "A config file must be supplied in $0" >&2
+	exit 2
+    else
+         	
+    fi
+}
+

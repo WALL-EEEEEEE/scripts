@@ -1,0 +1,10 @@
+#!/bin/bash
+#This script defines a function to parse config
+
+function parse_ini(){
+    if [ -z $1 ]; then
+	echo "A config file must be supplied in $0" >&2
+	exit 2
+    fi
+}
+

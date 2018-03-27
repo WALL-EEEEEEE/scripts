@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo sslocal -c /etc/shadowsocks/ssconfig.json -d start
+sudo /opt/shadowsocksr/shadowsocks/local.py -c /etc/shadowsocksr/bandwagon_104.194.94.203.json -d start
 
 
 

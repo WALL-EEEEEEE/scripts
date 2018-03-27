@@ -1,0 +1,4 @@
+foobar bash 1
+bash
+foobar happy
+foobar
